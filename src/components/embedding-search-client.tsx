@@ -27,8 +27,6 @@ export default function EmbeddingSearchClient() {
   const [query, setQuery] = useState(QUICK_QUERIES[0]);
   const [response, setResponse] = useState<EmbedApiSuccess | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [requestMs, setRequestMs] = useState<number | null>(null);
-  const [showJson, setShowJson] = useState(false);
   const [recentQueries, setRecentQueries] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
 
@@ -38,7 +36,6 @@ export default function EmbeddingSearchClient() {
     if (!normalizedQuery) {
       setError("Escribe una palabra o frase antes de consultar.");
       setResponse(null);
-      setRequestMs(null);
       return;
     }
 
@@ -46,8 +43,6 @@ export default function EmbeddingSearchClient() {
     setError(null);
 
     startTransition(async () => {
-      const startedAt = performance.now();
-
       try {
         const apiResponse = await fetch("/api/embed", {
           method: "POST",
@@ -74,14 +69,12 @@ export default function EmbeddingSearchClient() {
         }
 
         setResponse(payload);
-        setRequestMs(Math.round(performance.now() - startedAt));
         setRecentQueries((prev) => {
           const next = [normalizedQuery, ...prev.filter((item) => item !== normalizedQuery)];
           return next.slice(0, 5);
         });
       } catch (caughtError) {
         setResponse(null);
-        setRequestMs(null);
         setError(getErrorMessage(caughtError));
       }
     });
@@ -95,10 +88,10 @@ export default function EmbeddingSearchClient() {
         <div className="space-y-5">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--muted)]">
-              Consulta rapida
+              Explora
             </p>
             <h2 className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
-              Escribe tu busqueda y consulta la API
+              Describe lo que estas buscando
             </h2>
           </div>
 
@@ -140,7 +133,7 @@ export default function EmbeddingSearchClient() {
                 disabled={isPending}
                 className="inline-flex items-center justify-center rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--foreground-strong)] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isPending ? "Consultando..." : "Consultar"}
+                {isPending ? "Buscando..." : "Buscar"}
               </button>
               <button
                 type="button"
@@ -149,13 +142,12 @@ export default function EmbeddingSearchClient() {
                   setQuery("");
                   setResponse(null);
                   setError(null);
-                  setRequestMs(null);
                 }}
               >
                 Limpiar
               </button>
               <span className="text-sm text-[var(--muted)]">
-                {requestMs ? `Respuesta: ${requestMs} ms` : "Listo para consultar"}
+                {isPending ? "Estamos revisando coincidencias..." : "Listo para buscar"}
               </span>
             </div>
           </form>
@@ -166,31 +158,10 @@ export default function EmbeddingSearchClient() {
             </div>
           ) : null}
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-3">
-              <p className="text-xs text-[var(--muted)]">Endpoint</p>
-              <p className="mt-1 font-mono text-xs text-[var(--foreground)]">
-                POST /api/embed
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-3">
-              <p className="text-xs text-[var(--muted)]">Modelo</p>
-              <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
-                {response?.model ?? "gemini-embedding-001"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-3">
-              <p className="text-xs text-[var(--muted)]">Dimensiones</p>
-              <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
-                {response?.dimensions ?? "--"}
-              </p>
-            </div>
-          </div>
-
           {recentQueries.length ? (
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-                Recientes
+                Busquedas recientes
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {recentQueries.map((item) => (
@@ -214,7 +185,7 @@ export default function EmbeddingSearchClient() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-[#adc7bc]">
-                Mejor coincidencia
+                Resultado destacado
               </p>
               <h3 className="mt-2 text-xl font-semibold">
                 {strongestMatch?.title ?? "Sin resultados aun"}
@@ -238,13 +209,13 @@ export default function EmbeddingSearchClient() {
               </p>
             </div>
             <div className="rounded-2xl bg-white/[0.08] p-3">
-              <p className="text-xs text-[#adc7bc]">Documentos</p>
+              <p className="text-xs text-[#adc7bc]">Resultados</p>
               <p className="mt-1 text-sm font-semibold">
                 {response?.documentsAnalyzed ?? 0}
               </p>
             </div>
             <div className="rounded-2xl bg-white/[0.08] p-3">
-              <p className="text-xs text-[#adc7bc]">Consulta</p>
+              <p className="text-xs text-[#adc7bc]">Tu busqueda</p>
               <p className="mt-1 text-sm font-semibold">
                 {response?.query ?? "--"}
               </p>
@@ -256,17 +227,12 @@ export default function EmbeddingSearchClient() {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
-                Ranking
+                Resultados
               </p>
               <h3 className="mt-2 text-xl font-semibold text-[var(--foreground)]">
-                Resultados ordenados
+                Coincidencias encontradas
               </h3>
             </div>
-            {response ? (
-              <span className="rounded-full border border-[color:var(--border)] bg-white/70 px-3 py-1 text-xs text-[var(--muted)]">
-                {new Date(response.generatedAt).toLocaleString("es-CO")}
-              </span>
-            ) : null}
           </div>
 
           <div className="mt-4 space-y-3">
@@ -300,37 +266,6 @@ export default function EmbeddingSearchClient() {
               </div>
             )}
           </div>
-        </article>
-
-        <article className="rounded-3xl border border-[color:var(--border)] bg-[var(--panel)] p-6 shadow-[0_24px_60px_rgba(10,26,21,0.08)] backdrop-blur">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
-              Payload
-            </p>
-            <button
-              type="button"
-              className="rounded-full border border-[color:var(--border)] bg-white/70 px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
-              onClick={() => setShowJson((prev) => !prev)}
-            >
-              {showJson ? "Ocultar JSON" : "Ver JSON"}
-            </button>
-          </div>
-          {showJson ? (
-            <pre className="mt-3 overflow-x-auto rounded-2xl bg-[#101d18] p-4 text-xs leading-6 text-[#dfe8e3]">
-              <code>
-                {response
-                  ? JSON.stringify(response, null, 2)
-                  : `{
-  "query": "",
-  "results": []
-}`}
-              </code>
-            </pre>
-          ) : (
-            <p className="mt-3 text-sm text-[var(--muted)]">
-              Activa el JSON si necesitas inspeccionar la respuesta completa.
-            </p>
-          )}
         </article>
       </div>
     </section>
