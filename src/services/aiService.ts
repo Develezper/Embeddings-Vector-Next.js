@@ -1,3 +1,4 @@
+import "server-only";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const EMBEDDING_MODEL = "gemini-embedding-001";

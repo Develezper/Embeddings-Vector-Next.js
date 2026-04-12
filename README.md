@@ -62,7 +62,7 @@ $6.5 / (2.23 \times 2.91) = 6.5 / 6.48 = \mathbf{1.00}$ (Similitud muy alta)
 
 ## 4. Flujo de Ejecución del Taller
 
-1.  **Configuración de Entorno**: Crear archivo `.env` con la `GEMINI_API_KEY`.
+1.  **Configuración de Entorno**: Copiar `.env.example` a `.env` y definir la `GEMINI_API_KEY`.
 2.  **Generación de Vectores**: Explicar cómo el SDK de Google transforma un string en un array de 768 números flotantes.
 3.  **Búsqueda Semántica**:
     * Enviar una consulta (Query) desde el cliente React.

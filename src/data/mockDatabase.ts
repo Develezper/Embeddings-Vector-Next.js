@@ -1,3 +1,4 @@
+import "server-only";
 import { generateEmbedding } from "@/services/aiService";
 
 export type MockDocument = {
