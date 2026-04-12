@@ -1,5 +1,5 @@
 # Embeddings-Vector-Next.js
-Implementación de consumo de api gemini para sacar los vectores sea de una palabra u una frase
+Cliente y backend en Next.js para consultar embeddings con Gemini a partir de una palabra o una frase.
 
 
 # Implementación de Vector Embeddings con Gemini e IA
@@ -10,10 +10,11 @@ Este proyecto demuestra cómo implementar un sistema de búsqueda semántica uti
 
 Para este taller, hemos aplicado una arquitectura minimalista en **Next.js** y **TypeScript** para separar las capas de la aplicación:
 
+* **src/components/embedding-search-client.tsx**: Cliente React en TypeScript. Captura la consulta, consume la API backend y renderiza resultados, errores y payload.
 * **src/services/aiService.ts**: Capa de infraestructura. Contiene la comunicación directa con el SDK de Google Generative AI (Gemini) para transformar texto en vectores.
 * **src/lib/utils.ts**: Capa de utilidades. Contiene la lógica matemática pura (Similitud de Coseno).
-* **src/data/mockDatabase.ts**: Capa de datos. Simula una base de datos vectorial con registros "quemados" (textos + vectores) para demostraciones deterministas.
-* **src/app/api/embed/route.ts**: Controlador (API Route). Orquesta el flujo: recibe la petición, llama al servicio de IA, ejecuta la comparación y retorna los resultados ordenados.
+* **src/data/mockDatabase.ts**: Capa de datos. Mantiene un dataset de ejemplo y cachea sus embeddings para reutilizarlos en cada consulta.
+* **src/app/api/embed/route.ts**: Controlador (API Route). Recibe la petición, llama al servicio de IA, ejecuta la comparación y retorna los resultados ordenados.
 
 ---
 
@@ -64,16 +65,17 @@ $6.5 / (2.23 \times 2.91) = 6.5 / 6.48 = \mathbf{1.00}$ (Similitud muy alta)
 1.  **Configuración de Entorno**: Crear archivo `.env` con la `GEMINI_API_KEY`.
 2.  **Generación de Vectores**: Explicar cómo el SDK de Google transforma un string en un array de 768 números flotantes.
 3.  **Búsqueda Semántica**:
-    * Enviar una consulta (Query) desde el cliente.
+    * Enviar una consulta (Query) desde el cliente React.
     * Vectorizar la consulta en tiempo real.
     * Comparar contra la `mockDatabase`.
+    * Mostrar el ranking ordenado por similitud de coseno.
 4.  **Visualización**: Exportar los datos generados a archivos `.tsv` para explorarlos visualmente en el **TensorFlow Embedding Projector**.
 
 ---
 
 ## 5. Requisitos Técnicos
 
-* Node.js 18+
-* Next.js 14/15 (App Router)
+* Node.js 20.9+
+* Next.js 16 (App Router)
 * Google Generative AI SDK (`@google/generative-ai`)
 * TypeScript

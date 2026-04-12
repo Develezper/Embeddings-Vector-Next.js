@@ -1,28 +1,70 @@
-import { NextResponse } from 'next/server';
-import { generateEmbedding } from '@/servicio/iaService';
-import { MOCK_EMBEDDINGS } from '@/data/mockDatabase';
-import { cosineSimilarity } from '@/lib/utils';
+import { NextResponse } from "next/server";
+import { getMockEmbeddings } from "@/data/mockDatabase";
+import { cosineSimilarity } from "@/lib/utils";
+import {
+  generateEmbedding,
+  getEmbeddingModelName,
+} from "@/services/aiService";
+import type { EmbedApiError, EmbedApiSuccess } from "@/types/embedding";
 
-export async function POST(req: Request) {
-    try {
-        const { query } = await req.json();
+export const runtime = "nodejs";
 
-        if (!query) return NextResponse.json({ error: "Query is required" }, { status: 400 });
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
 
-        // 1. Obtener vector de la búsqueda
-        const queryVector = await generateEmbedding(query);
-        console.log(queryVector);
+  return "Ocurrió un error inesperado al generar embeddings.";
+}
 
-        // 2. Procesar similitudes
-        const results = MOCK_EMBEDDINGS.map(item => ({
-            text: item.text,
-            similarity: (cosineSimilarity(queryVector, item.vector) * 100).toFixed(2) + "%"
-        })).sort((a, b) => parseFloat(b.similarity) - parseFloat(a.similarity));
+export async function POST(request: Request) {
+  try {
+    const body = (await request.json()) as { query?: unknown };
+    const query =
+      typeof body.query === "string" ? body.query.trim().replace(/\s+/g, " ") : "";
 
-        return NextResponse.json({ query, results });
-
-    } catch (error) {
-        console.error("Embedding Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    if (!query) {
+      return NextResponse.json<EmbedApiError>(
+        { error: "Debes enviar un texto en el campo `query`." },
+        { status: 400 },
+      );
     }
+
+    const [queryVector, database] = await Promise.all([
+      generateEmbedding(query),
+      getMockEmbeddings(),
+    ]);
+
+    const results = database
+      .map((item) => {
+        const score = cosineSimilarity(queryVector, item.vector);
+
+        return {
+          id: item.id,
+          title: item.title,
+          category: item.category,
+          text: item.text,
+          score,
+          similarity: `${(score * 100).toFixed(2)}%`,
+        };
+      })
+      .sort((left, right) => right.score - left.score);
+
+    return NextResponse.json<EmbedApiSuccess>({
+      query,
+      model: getEmbeddingModelName(),
+      dimensions: queryVector.length,
+      documentsAnalyzed: database.length,
+      generatedAt: new Date().toISOString(),
+      results,
+    });
+  } catch (error) {
+    const message = getErrorMessage(error);
+    console.error("Embedding Error:", error);
+
+    return NextResponse.json<EmbedApiError>(
+      { error: message },
+      { status: 500 },
+    );
+  }
 }
