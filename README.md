@@ -76,6 +76,49 @@ $6.5 / (2.23 \times 2.91) = 6.5 / 6.48 = \mathbf{1.00}$ (Similitud muy alta)
 ## 5. Requisitos Técnicos
 
 * Node.js 20.9+
+* Bun 1.3+
 * Next.js 16 (App Router)
 * Google Generative AI SDK (`@google/generative-ai`)
 * TypeScript
+
+---
+
+## 6. Ejecución con Bun
+
+1. Instalar dependencias:
+
+```bash
+bun install
+```
+
+2. Crear el archivo de entorno:
+
+```bash
+cp .env.example .env
+```
+
+3. Definir tu clave en `.env`:
+
+```env
+GEMINI_API_KEY=tu_api_key_de_gemini
+```
+
+4. Ejecutar en desarrollo:
+
+```bash
+bun run dev
+```
+
+5. Abrir en el navegador:
+
+```txt
+http://localhost:3000
+```
+
+Comandos útiles:
+
+```bash
+bun run lint
+bun run build --webpack
+bun run start
+```
