@@ -23,6 +23,22 @@ function isSuccessPayload(
   return "results" in payload;
 }
 
+function getRelevanceLabel(score: number) {
+  if (score >= 0.9) {
+    return "Muy relacionado";
+  }
+
+  if (score >= 0.75) {
+    return "Relacionado";
+  }
+
+  if (score >= 0.55) {
+    return "Puede servir";
+  }
+
+  return "Coincidencia baja";
+}
+
 export default function EmbeddingSearchClient() {
   const [query, setQuery] = useState(QUICK_QUERIES[0]);
   const [response, setResponse] = useState<EmbedApiSuccess | null>(null);
@@ -81,6 +97,7 @@ export default function EmbeddingSearchClient() {
   }
 
   const strongestMatch = response?.results[0] ?? null;
+  const totalResults = response?.results.length ?? 0;
 
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
@@ -192,7 +209,7 @@ export default function EmbeddingSearchClient() {
               </h3>
             </div>
             <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-[#f7d7cb]">
-              {strongestMatch?.similarity ?? "--"}
+              {strongestMatch ? getRelevanceLabel(strongestMatch.score) : "--"}
             </span>
           </div>
 
@@ -203,7 +220,7 @@ export default function EmbeddingSearchClient() {
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl bg-white/[0.08] p-3">
-              <p className="text-xs text-[#adc7bc]">Categoria</p>
+              <p className="text-xs text-[#adc7bc]">Tema</p>
               <p className="mt-1 text-sm font-semibold">
                 {strongestMatch?.category ?? "--"}
               </p>
@@ -211,7 +228,7 @@ export default function EmbeddingSearchClient() {
             <div className="rounded-2xl bg-white/[0.08] p-3">
               <p className="text-xs text-[#adc7bc]">Resultados</p>
               <p className="mt-1 text-sm font-semibold">
-                {response?.documentsAnalyzed ?? 0}
+                {totalResults}
               </p>
             </div>
             <div className="rounded-2xl bg-white/[0.08] p-3">
@@ -232,6 +249,11 @@ export default function EmbeddingSearchClient() {
               <h3 className="mt-2 text-xl font-semibold text-[var(--foreground)]">
                 Coincidencias encontradas
               </h3>
+              <p className="mt-1 text-sm text-[var(--muted)]">
+                {response
+                  ? `${totalResults} opciones para revisar`
+                  : "Aqui apareceran las opciones mas cercanas a tu busqueda"}
+              </p>
             </div>
           </div>
 
@@ -245,14 +267,17 @@ export default function EmbeddingSearchClient() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs text-[var(--muted)]">
-                        #{index + 1} · {result.category}
+                        Opcion {index + 1}
                       </p>
                       <h4 className="mt-1 text-sm font-semibold text-[var(--foreground)]">
                         {result.title}
                       </h4>
+                      <p className="mt-1 text-xs text-[var(--muted)]">
+                        {result.category}
+                      </p>
                     </div>
                     <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]">
-                      {result.similarity}
+                      {getRelevanceLabel(result.score)}
                     </span>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
