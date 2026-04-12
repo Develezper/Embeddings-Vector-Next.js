@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "my-app-thompson",
+      "name": "embeddings-vector-nextjs",
       "dependencies": {
         "@google/generative-ai": "^0.24.1",
         "next": "16.2.2",

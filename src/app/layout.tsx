@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Embeddings Vector Workshop",
+  title: "Embeddings Vector Search",
   description:
-    "Cliente en TypeScript y React que consume una API backend de embeddings con Next.js y Gemini.",
+    "Interfaz en React para probar busqueda semantica con Next.js y Gemini.",
 };
 
 export default function RootLayout({
