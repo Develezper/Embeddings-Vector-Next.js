@@ -1,124 +1,73 @@
-# Embeddings-Vector-Next.js
-Cliente y backend en Next.js para consultar embeddings con Gemini a partir de una palabra o una frase.
+# Embeddings Vector Next.js
 
+Este proyecto es una aplicacion hecha con Next.js que permite probar una busqueda semantica usando embeddings de Gemini.
 
-# Implementación de Vector Embeddings con Gemini e IA
+La idea principal es simple: el usuario escribe una frase en el front, la app envia esa consulta al backend, el backend genera un embedding con Gemini y luego compara ese vector contra un conjunto de textos de ejemplo. Al final, la interfaz muestra cuales textos se parecen mas a lo que el usuario quiso decir, aunque no usen exactamente las mismas palabras.
 
-Este proyecto demuestra cómo implementar un sistema de búsqueda semántica utilizando **Vector Embeddings**. Se enfoca en la arquitectura de software, la separación de responsabilidades y el cálculo matemático de similitud.
+## Que hace este proyecto
 
-## 1. Arquitectura del Proyecto
+- ofrece una interfaz sencilla para escribir una consulta
+- envia la consulta a una ruta interna del proyecto
+- genera embeddings en el servidor usando `GEMINI_API_KEY`
+- compara la consulta con un dataset de ejemplo
+- devuelve un ranking de resultados ordenados por similitud
 
-Para este proyecto, hemos aplicado una arquitectura minimalista en **Next.js** y **TypeScript** para separar las capas de la aplicación:
+## Como funciona
 
-* **src/components/embedding-search-client.tsx**: Cliente React en TypeScript. Captura la consulta, consume la API backend y renderiza resultados, errores y payload.
-* **src/services/aiService.ts**: Capa de infraestructura. Contiene la comunicación directa con el SDK de Google Generative AI (Gemini) para transformar texto en vectores.
-* **src/lib/utils.ts**: Capa de utilidades. Contiene la lógica matemática pura (Similitud de Coseno).
-* **src/data/mockDatabase.ts**: Capa de datos. Mantiene un dataset de ejemplo y cachea sus embeddings para reutilizarlos en cada consulta.
-* **src/app/api/embed/route.ts**: Controlador (API Route). Recibe la petición, llama al servicio de IA, ejecuta la comparación y retorna los resultados ordenados.
+El flujo general es este:
 
----
+1. El usuario escribe una frase en el front.
+2. El cliente envia un `POST` a `src/app/api/embed/route.ts`.
+3. El servidor genera el embedding de la consulta con Gemini.
+4. El servidor compara ese vector con los embeddings del dataset local.
+5. La app muestra el resultado mas cercano y el resto de coincidencias.
 
-## 2. Conceptos Clave
+## Estructura principal
 
-### ¿Qué es un Embedding?
-Es una representación numérica (vector) de un concepto. A diferencia de una búsqueda por palabras clave, los embeddings capturan el **contexto semántico**.
+- `src/app/page.tsx`: pagina principal
+- `src/components/embedding-search-client.tsx`: interfaz donde el usuario hace la busqueda
+- `src/app/api/embed/route.ts`: endpoint interno que procesa la consulta
+- `src/services/aiService.ts`: integracion con Gemini
+- `src/data/mockDatabase.ts`: textos de ejemplo usados para comparar
+- `src/lib/utils.ts`: utilidad para calcular similitud de coseno
 
-### Similitud de Coseno
-Es la métrica utilizada para medir qué tan parecidos son dos vectores en un espacio multidimensional. El resultado varía entre **-1** y **1** (donde 1 es identidad total).
+## Requisitos
 
-**Fórmula Matemática:**
+- Bun
+- Node.js 20 o superior
+- una clave valida en `GEMINI_API_KEY`
 
-$$\text{similarity} = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}$$
+## Como ejecutarlo
 
-Donde:
-* $\mathbf{A} \cdot \mathbf{B}$ es el producto punto de los vectores.
-* $\|\mathbf{A}\|$ es la magnitud (norma) del vector A.
-
----
-
-## 3. Guía de Ejercicio en Vivo (Similitud Manual)
-
-Para demostrar la matemática a los estudiantes, se puede realizar este ejemplo simplificado con vectores de 2 dimensiones ($X, Y$).
-
-### Paso a paso del cálculo:
-
-**Vectores:**
-* **A (Vaca):** `[1, 2]`
-* **B (Queso):** `[1.5, 2.5]`
-
-**1. Producto Punto ($A \cdot B$):**
-$(1 \times 1.5) + (2 \times 2.5) = 1.5 + 5 = \mathbf{6.5}$
-
-**2. Magnitud de A ($\|A\|$):**
-$\sqrt{1^2 + 2^2} = \sqrt{1 + 4} = \mathbf{2.23}$
-
-**3. Magnitud de B ($\|B\|$):**
-$\sqrt{1.5^2 + 2.5^2} = \sqrt{2.25 + 6.25} = \sqrt{8.5} = \mathbf{2.91}$
-
-**4. Resultado Final:**
-$6.5 / (2.23 \times 2.91) = 6.5 / 6.48 = \mathbf{1.00}$ (Similitud muy alta)
-
----
-
-## 4. Flujo de Ejecucion del Proyecto
-
-1.  **Configuración de Entorno**: Copiar `.env.example` a `.env` y definir la `GEMINI_API_KEY`.
-2.  **Generación de Vectores**: Explicar cómo el SDK de Google transforma un string en un array de 768 números flotantes.
-3.  **Búsqueda Semántica**:
-    * Enviar una consulta (Query) desde el cliente React.
-    * Vectorizar la consulta en tiempo real.
-    * Comparar contra la `mockDatabase`.
-    * Mostrar el ranking ordenado por similitud de coseno.
-4.  **Visualización**: Exportar los datos generados a archivos `.tsv` para explorarlos visualmente en el **TensorFlow Embedding Projector**.
-
----
-
-## 5. Requisitos Técnicos
-
-* Node.js 20.9+
-* Bun 1.3+
-* Next.js 16 (App Router)
-* Google Generative AI SDK (`@google/generative-ai`)
-* TypeScript
-
----
-
-## 6. Ejecución con Bun
-
-1. Instalar dependencias:
+1. Instala dependencias:
 
 ```bash
 bun install
 ```
 
-2. Crear el archivo de entorno:
-
-```bash
-cp .env.example .env
-```
-
-3. Definir tu clave en `.env`:
+2. Crea tu archivo `.env` y agrega:
 
 ```env
-GEMINI_API_KEY=tu_api_key_de_gemini
+GEMINI_API_KEY=tu_api_key
 ```
 
-4. Ejecutar en desarrollo:
+3. Inicia el proyecto:
 
 ```bash
 bun run dev
 ```
 
-5. Abrir en el navegador:
+4. Abre en el navegador:
 
 ```txt
 http://localhost:3000
 ```
 
-Comandos útiles:
+## Scripts utiles
 
 ```bash
+bun run dev
 bun run lint
-bun run build --webpack
+bun run build
 bun run start
 ```
