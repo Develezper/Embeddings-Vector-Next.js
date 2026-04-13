@@ -44,6 +44,7 @@ export default function EmbeddingSearchClient() {
   const [response, setResponse] = useState<EmbedApiSuccess | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [recentQueries, setRecentQueries] = useState<string[]>([]);
+  const [showAllResults, setShowAllResults] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function runSearch(nextQuery: string) {
@@ -85,6 +86,7 @@ export default function EmbeddingSearchClient() {
         }
 
         setResponse(payload);
+        setShowAllResults(false);
         setRecentQueries((prev) => {
           const next = [normalizedQuery, ...prev.filter((item) => item !== normalizedQuery)];
           return next.slice(0, 5);
@@ -98,6 +100,10 @@ export default function EmbeddingSearchClient() {
 
   const strongestMatch = response?.results[0] ?? null;
   const totalResults = response?.results.length ?? 0;
+  const visibleResults = showAllResults
+    ? response?.results ?? []
+    : response?.results.slice(0, 3) ?? [];
+  const hiddenResults = Math.max(0, totalResults - visibleResults.length);
 
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
@@ -159,6 +165,7 @@ export default function EmbeddingSearchClient() {
                   setQuery("");
                   setResponse(null);
                   setError(null);
+                  setShowAllResults(false);
                 }}
               >
                 Limpiar
@@ -258,8 +265,8 @@ export default function EmbeddingSearchClient() {
           </div>
 
           <div className="mt-4 space-y-3">
-            {response?.results.length ? (
-              response.results.map((result, index) => (
+            {visibleResults.length ? (
+              visibleResults.map((result, index) => (
                 <article
                   key={result.id}
                   className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-4"
@@ -291,6 +298,20 @@ export default function EmbeddingSearchClient() {
               </div>
             )}
           </div>
+
+          {totalResults > 3 ? (
+            <div className="mt-4 flex justify-center">
+              <button
+                type="button"
+                className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[color:var(--accent)] hover:bg-[var(--accent-soft)]"
+                onClick={() => setShowAllResults((prev) => !prev)}
+              >
+                {showAllResults
+                  ? "Ver menos"
+                  : `Ver mas${hiddenResults ? ` (${hiddenResults})` : ""}`}
+              </button>
+            </div>
+          ) : null}
         </article>
       </div>
     </section>
