@@ -4,9 +4,9 @@ import { useState, useTransition } from "react";
 import type { EmbedApiError, EmbedApiSuccess } from "@/types/embedding";
 
 const QUICK_QUERIES = [
-  "dashboard de ventas para retail",
-  "reporte mensual de clientes y facturacion",
-  "optimizacion de procesos en logistica",
+  "ideas para mejorar la atención al cliente",
+  "cómo organizar mejor mis finanzas personales",
+  "estrategias para vender más en ecommerce",
 ];
 
 function getErrorMessage(error: unknown) {

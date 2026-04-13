@@ -1,0 +1,128 @@
+[
+  {
+    "id": "salud-prevencion",
+    "title": "Salud preventiva",
+    "category": "Salud",
+    "text": "La salud preventiva promueve chequeos medicos, alimentacion equilibrada, actividad fisica y habitos diarios que reducen riesgos a largo plazo."
+  },
+  {
+    "id": "finanzas-ahorro",
+    "title": "Ahorro y finanzas personales",
+    "category": "Finanzas",
+    "text": "Las finanzas personales sanas combinan presupuesto mensual, control de gastos, ahorro constante y decisiones responsables sobre deudas."
+  },
+  {
+    "id": "educacion-digital",
+    "title": "Educacion en linea",
+    "category": "Educacion",
+    "text": "La educacion digital facilita aprendizaje flexible con clases virtuales, recursos interactivos, seguimiento del progreso y acceso remoto."
+  },
+  {
+    "id": "turismo-experiencias",
+    "title": "Turismo y viajes",
+    "category": "Turismo",
+    "text": "El turismo moderno busca experiencias seguras, buena planificacion, alojamiento comodo, actividades locales y recomendaciones personalizadas."
+  },
+  {
+    "id": "marketing-digital",
+    "title": "Marketing digital",
+    "category": "Marketing",
+    "text": "El marketing digital usa redes sociales, campanas de contenido, anuncios segmentados y analitica para atraer y convertir clientes."
+  },
+  {
+    "id": "ventas-retail",
+    "title": "Ventas en retail",
+    "category": "Ventas",
+    "text": "Las ventas retail mejoran con inventario disponible, atencion rapida, promociones bien disenadas y analisis del comportamiento del cliente."
+  },
+  {
+    "id": "soporte-cliente",
+    "title": "Atencion al cliente",
+    "category": "Servicio",
+    "text": "Un buen servicio al cliente responde rapido, resuelve dudas con claridad y mantiene una experiencia positiva antes y despues de la compra."
+  },
+  {
+    "id": "logistica-operacion",
+    "title": "Logistica y distribucion",
+    "category": "Logistica",
+    "text": "La logistica eficiente coordina inventario, transporte, rutas, tiempos de entrega y control operativo para reducir costos."
+  },
+  {
+    "id": "recursos-humanos",
+    "title": "Gestion de talento",
+    "category": "Recursos Humanos",
+    "text": "La gestion de talento incluye seleccion de personal, capacitacion, evaluacion del desempeno y bienestar del equipo de trabajo."
+  },
+  {
+    "id": "juridico-empresas",
+    "title": "Procesos legales",
+    "category": "Legal",
+    "text": "Los procesos legales empresariales requieren contratos claros, cumplimiento normativo, revision documental y reduccion de riesgos juridicos."
+  },
+  {
+    "id": "inmobiliaria-ventas",
+    "title": "Bienes raices",
+    "category": "Inmobiliaria",
+    "text": "El sector inmobiliario trabaja con compra, venta y arriendo de propiedades, evaluacion de zonas y acompanamiento comercial."
+  },
+  {
+    "id": "gastronomia-restaurantes",
+    "title": "Restaurantes y gastronomia",
+    "category": "Gastronomia",
+    "text": "Los restaurantes crecen con buena atencion, calidad constante, gestion de reservas, control de costos y experiencia memorable."
+  },
+  {
+    "id": "deporte-rendimiento",
+    "title": "Entrenamiento deportivo",
+    "category": "Deporte",
+    "text": "El entrenamiento deportivo combina planificacion fisica, recuperacion, disciplina, nutricion y seguimiento del rendimiento."
+  },
+  {
+    "id": "medioambiente-sostenibilidad",
+    "title": "Sostenibilidad ambiental",
+    "category": "Medio Ambiente",
+    "text": "La sostenibilidad ambiental impulsa reciclaje, ahorro de recursos, energias limpias y practicas responsables en empresas y hogares."
+  },
+  {
+    "id": "agro-produccion",
+    "title": "Produccion agricola",
+    "category": "Agro",
+    "text": "La produccion agricola depende de suelo fertil, riego adecuado, control de plagas, planificacion de cultivos y clima favorable."
+  },
+  {
+    "id": "tecnologia-desarrollo",
+    "title": "Desarrollo de software",
+    "category": "Tecnologia",
+    "text": "El desarrollo de software crea soluciones digitales con diseno de interfaces, logica de negocio, pruebas y mantenimiento continuo."
+  },
+  {
+    "id": "ciberseguridad-datos",
+    "title": "Seguridad informatica",
+    "category": "Ciberseguridad",
+    "text": "La seguridad informatica protege sistemas y datos mediante control de accesos, monitoreo, copias de seguridad y prevencion de ataques."
+  },
+  {
+    "id": "ecommerce-operacion",
+    "title": "Comercio electronico",
+    "category": "Ecommerce",
+    "text": "El comercio electronico integra catalogo de productos, pagos en linea, logistica de envios y seguimiento de conversiones."
+  },
+  {
+    "id": "productividad-organizacion",
+    "title": "Organizacion y productividad",
+    "category": "Productividad",
+    "text": "La productividad mejora con prioridades claras, automatizacion, buena comunicacion y seguimiento de tareas importantes."
+  },
+  {
+    "id": "arte-creatividad",
+    "title": "Arte y creatividad",
+    "category": "Creatividad",
+    "text": "El trabajo creativo reune diseno, inspiracion, exploracion visual, narrativa y expresion para comunicar ideas con impacto."
+  },
+  {
+    "id": "entretenimiento-audiovisual",
+    "title": "Contenido y entretenimiento",
+    "category": "Entretenimiento",
+    "text": "La industria del entretenimiento produce experiencias audiovisuales, musica, guiones, eventos y formatos digitales para audiencias diversas."
+  }
+]
